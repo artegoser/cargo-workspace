@@ -1,0 +1,24 @@
+[package]
+name = "cargo-works"
+version = "0.1.1"
+edition = "2021"
+
+authors = ["artegoser"]
+license = "MIT"
+description = "Cargo utils for workspaces"
+repository = "https://github.com/artegoser/cargo-workspace"
+readme = "./README.md"
+keywords = ["cargo", "workspace", "utils", "cli", "tool"]
+categories = ["cargo", "cli", "tool"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.4.12", features = ["derive"] }
+semver = "1.0.20"
+toml_edit = "0.21.0"
+colored = "2.1.0"
+
+[[bin]]
+name = "cargo-works"
+path = "src/main.rs"
