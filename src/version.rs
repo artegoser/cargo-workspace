@@ -77,20 +77,23 @@ impl Updater {
             //     continue;
             // }
 
+            let info_str = match type_of_update {
+                VersionUpdates::None => {
+                    format!("Updated {main_package_name}({version}) in {package_string}",)
+                }
+                _ => format!(
+                    "Updated {main_package_name}({version}) to {new_version} in dependencies {}",
+                    cargo_toml["package"]["name"]
+                ),
+            };
+
             match cargo_toml.get("dependencies") {
                 Some(v) => match v.get(main_package_name) {
                     Some(_) => {
                         cargo_toml["dependencies"][main_package_name]["version"] =
                             value(new_version.to_string());
 
-                        println!(
-                                "{}",
-                                format!(
-                                    "Updated {main_package_name}({version}) to {new_version} in dependencies {}",
-                                    cargo_toml["package"]["name"]
-                                )
-                                .black()
-                            );
+                        println!("{}", info_str.black());
 
                         changed = true;
                     }
@@ -105,14 +108,7 @@ impl Updater {
                         cargo_toml["dev-dependencies"][main_package_name]["version"] =
                             value(new_version.to_string());
 
-                        println!(
-                                "{}",
-                                format!(
-                                    "Updated {main_package_name}({version}) to {new_version} in dev-dependencies {}",
-                                    cargo_toml["package"]["name"]
-                                )
-                                .black()
-                            );
+                        println!("{}", info_str.black());
 
                         changed = true;
                     }
