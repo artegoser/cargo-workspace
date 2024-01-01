@@ -53,37 +53,39 @@ impl Updater {
         )
         .expect("Failed to write to Cargo.toml");
 
-        // self.patched.push(name.clone());
-
-        println!(
-            "{}",
-            format!("Updated {main_package_name}({version}) to {new_version}")
-                .green()
-                .bold()
-        );
+        match type_of_update {
+            VersionUpdates::None => {}
+            _ => {
+                println!(
+                "{}",
+                format!("Updated version of `{main_package_name}` from `v{version}` to `v{new_version}`")
+                    .green()
+                    .bold()
+            );
+            }
+        }
 
         let mut to_cascade_update: Vec<String> = vec![];
 
         for package in workspace_toml["workspace"]["members"].as_array().unwrap() {
             let package_string = package.as_str().unwrap().to_string();
+
             let mut cargo_toml = std::fs::read_to_string(format!("./{package_string}/Cargo.toml"))
                 .expect(&format!("Could not read {package_string} Cargo.toml"))
                 .parse::<Document>()
                 .expect("Invalid package cargo.toml");
 
-            let mut changed = false;
+            let package_name_str = cargo_toml["package"]["name"].as_str().unwrap();
 
-            // if self.patched.contains(&package_string) {
-            //     continue;
-            // }
+            let mut changed = false;
 
             let info_str = match type_of_update {
                 VersionUpdates::None => {
-                    format!("Updated {main_package_name}({version}) in {package_string}",)
+                    format!("Updated version of `{main_package_name}` in `{package_name_str}`",)
                 }
                 _ => format!(
-                    "Updated {main_package_name}({version}) to {new_version} in dependencies {}",
-                    cargo_toml["package"]["name"]
+                    "Updated version of `{main_package_name}` from `v{version}` to `v{new_version}` in `{}`",
+                    package_name_str
                 ),
             };
 
@@ -146,13 +148,7 @@ impl Updater {
 
         if !self.patched.contains(&name) {
             for package in to_cascade_update {
-                println!(
-                    "\n{}",
-                    format!("Starting cascade update of {package}")
-                        .black()
-                        .bold()
-                );
-
+                println!("\n{}", format!("Checking {package}").black().bold());
                 self.update_version(package, VersionUpdates::None);
             }
         }
