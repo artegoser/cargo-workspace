@@ -8,7 +8,7 @@ mod version;
 use types::*;
 
 fn main() {
-    let args = types::Cli::parse();
+    let types::Cargo::Works(args) = types::Cargo::parse();
 
     match args.cmd {
         Commands::Version { name, cmd } => version::update_version(name, cmd),

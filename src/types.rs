@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
-#[command(name = "cargo-workspace", bin_name = "cargo-workspace")]
+#[command(name = "cargo-works", bin_name = "cargo-works")]
 #[command(about = "Cargo utils for workspaces", long_about = None)]
 pub struct Cli {
     #[command(subcommand)]
@@ -35,4 +35,10 @@ pub enum VersionUpdates {
     Major,
     Minor,
     Patch,
+}
+
+#[derive(Debug, Parser)]
+#[clap(name = "cargo-works", bin_name = "cargo", version)]
+pub enum Cargo {
+    Works(Cli),
 }
