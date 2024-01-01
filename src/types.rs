@@ -24,7 +24,7 @@ pub enum Commands {
         #[clap(short, long)]
         dry_run: bool,
 
-        #[clap(short, long)]
+        #[clap(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
         packages: Vec<String>,
     },
 }

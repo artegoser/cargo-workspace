@@ -1,7 +1,7 @@
 use std::process::{Command, Stdio};
 
-pub fn cargo<'a>(args: &[&'a str]) {
-    let mut command = Command::new("cargo publish");
+pub fn cargo<'a>(args: Vec<&'a str>) {
+    let mut command = Command::new("cargo");
     command
         .args(args)
         .stdin(Stdio::inherit())
