@@ -25,7 +25,10 @@ pub enum Commands {
         dry_run: bool,
 
         #[clap(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
-        packages: Vec<String>,
+        packages: Option<Vec<String>>,
+
+        #[clap(short, long)]
+        all: bool,
     },
 }
 

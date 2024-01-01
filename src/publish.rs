@@ -3,7 +3,23 @@ use toml_edit::Document;
 
 use crate::cargo::cargo;
 
-pub fn publish(dry_run: bool, packages: Vec<String>) {
+pub fn publish(dry_run: bool, packages: Option<Vec<String>>, all: bool) {
+    let packages = if all {
+        let toml = std::fs::read_to_string("./Cargo.toml")
+            .expect("Could not read workspace Cargo.toml")
+            .parse::<Document>()
+            .expect("Invalid workspace cargo.toml");
+
+        toml["workspace"]["members"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|s| s.as_str().unwrap().to_string())
+            .collect()
+    } else {
+        packages.unwrap_or_default()
+    };
+
     for package in packages {
         let cargo_toml = std::fs::read_to_string(format!("./{package}/Cargo.toml"))
             .expect(&format!("Could not read {package} Cargo.toml"))

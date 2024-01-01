@@ -15,6 +15,10 @@ fn main() {
             let mut updater = version::Updater::new();
             updater.update_version(name, cmd);
         }
-        Commands::Publish { dry_run, packages } => publish::publish(dry_run, packages),
+        Commands::Publish {
+            dry_run,
+            packages,
+            all,
+        } => publish::publish(dry_run, packages, all),
     }
 }
