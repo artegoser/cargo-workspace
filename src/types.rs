@@ -18,17 +18,21 @@ pub enum Commands {
         /// Version update
         #[command(subcommand)]
         cmd: VersionUpdates,
+
+        /// Publish to crates.io
+        #[clap(short, long)]
+        publish: bool,
     },
 
     Publish {
-        #[clap(short, long)]
-        dry_run: bool,
-
         #[clap(short, long, value_parser, num_args = 1.., value_delimiter = ' ')]
         packages: Option<Vec<String>>,
 
         #[clap(short, long)]
         all: bool,
+
+        #[clap(short, long)]
+        dry_run: bool,
     },
 }
 

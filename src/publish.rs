@@ -1,9 +1,9 @@
 use colored::Colorize;
 use toml_edit::Document;
 
-use crate::cargo::cargo;
+use crate::term::cargo;
 
-pub fn publish(dry_run: bool, packages: Option<Vec<String>>, all: bool) {
+pub fn publish(packages: Option<Vec<String>>, dry_run: bool, all: bool) {
     let packages = if all {
         let toml = std::fs::read_to_string("./Cargo.toml")
             .expect("Could not read workspace Cargo.toml")
@@ -28,16 +28,11 @@ pub fn publish(dry_run: bool, packages: Option<Vec<String>>, all: bool) {
 
         let package_name = cargo_toml["package"]["name"].as_str().unwrap();
 
-        let args = if dry_run {
-            vec!["publish", "-p", package_name, "--dry-run"]
-        } else {
-            vec!["publish", "-p", package_name]
-        };
-
         println!(
             "\n------------------| {} |------------------\n",
             package_name.green().bold()
         );
-        cargo(args);
+
+        cargo::publish(&package, dry_run);
     }
 }

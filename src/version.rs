@@ -2,7 +2,8 @@ use colored::Colorize;
 use semver::Version;
 use toml_edit::{value, Document};
 
-use crate::types;
+use crate::term::git;
+use crate::{publish, types};
 
 use types::VersionUpdates;
 
@@ -15,7 +16,22 @@ impl Updater {
         Self { patched: vec![] }
     }
 
-    pub fn update_version(&mut self, folder_name: String, type_of_update: VersionUpdates) {
+    pub fn version(&mut self, folder_name: String, type_of_update: VersionUpdates, publish: bool) {
+        let mut updated = vec![folder_name.clone()];
+
+        self.update_version(folder_name, type_of_update);
+
+        for package in &self.patched {
+            updated.push(package.clone());
+        }
+
+        if publish {
+            git::commit("chore: intercrate version updates");
+            publish::publish(Some(updated), false, false);
+        }
+    }
+
+    fn update_version(&mut self, folder_name: String, type_of_update: VersionUpdates) {
         let workspace_toml = std::fs::read_to_string("./Cargo.toml")
             .expect("Could not read workspace Cargo.toml")
             .parse::<Document>()
