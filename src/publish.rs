@@ -33,6 +33,6 @@ pub fn publish(packages: Option<Vec<String>>, dry_run: bool, all: bool) {
             package_name.green().bold()
         );
 
-        cargo::publish(&package, dry_run);
+        cargo::publish(&package_name, dry_run);
     }
 }
