@@ -104,6 +104,15 @@ impl Updater {
             match cargo_toml.get("dependencies") {
                 Some(v) => match v.get(main_package_name) {
                     Some(_) => {
+                        let init_v = &cargo_toml["dependencies"][main_package_name]["version"]
+                            .as_str()
+                            .unwrap()
+                            .to_string();
+
+                        if init_v == &new_version.to_string() {
+                            continue;
+                        }
+
                         cargo_toml["dependencies"][main_package_name]["version"] =
                             value(new_version.to_string());
 
@@ -119,6 +128,15 @@ impl Updater {
             match cargo_toml.get("dev-dependencies") {
                 Some(v) => match v.get(main_package_name) {
                     Some(_) => {
+                        let init_v = &cargo_toml["dependencies"][main_package_name]["version"]
+                            .as_str()
+                            .unwrap()
+                            .to_string();
+
+                        if init_v == &new_version.to_string() {
+                            continue;
+                        }
+
                         cargo_toml["dev-dependencies"][main_package_name]["version"] =
                             value(new_version.to_string());
 
