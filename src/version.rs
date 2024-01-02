@@ -56,6 +56,11 @@ impl Updater {
             VersionUpdates::Minor => Version::new(version.major, version.minor + 1, 0),
             VersionUpdates::Patch => Version::new(version.major, version.minor, version.patch + 1),
             VersionUpdates::None => version.clone(),
+            VersionUpdates::UnMajor => Version::new(version.major - 1, 0, 0),
+            VersionUpdates::UnMinor => Version::new(version.major, version.minor - 1, 0),
+            VersionUpdates::UnPatch => {
+                Version::new(version.major, version.minor, version.patch - 1)
+            }
         };
 
         folder_toml["package"]["version"] = value(new_version.to_string());
@@ -166,7 +171,13 @@ impl Updater {
         if !self.patched.contains(&folder_name) {
             for package in to_cascade_update {
                 println!("\n{}", format!("Checking {package}").black().bold());
-                self.update_version(package, VersionUpdates::Patch);
+
+                match type_of_update {
+                    VersionUpdates::UnMajor | VersionUpdates::UnMinor | VersionUpdates::UnPatch => {
+                        self.update_version(package, VersionUpdates::UnPatch);
+                    }
+                    _ => self.update_version(package, VersionUpdates::Patch),
+                }
             }
         }
     }

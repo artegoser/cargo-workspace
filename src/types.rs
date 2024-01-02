@@ -43,6 +43,9 @@ pub enum VersionUpdates {
     Minor,
     Patch,
     None,
+    UnMajor,
+    UnMinor,
+    UnPatch,
 }
 
 #[derive(Debug, Parser)]
